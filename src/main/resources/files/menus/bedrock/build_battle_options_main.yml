@@ -1,0 +1,39 @@
+file_version: 1
+menuName: 'Build Options'
+content:
+  - 'Change time, weather, floor, biome or reset your plot.'
+buttons:
+  time:
+    text: 'Time of Day'
+    image: 'https://minecraft.wiki/images/Clock_%28item%29_JE3_BE3.png?format=original'
+    actions:
+      - 'MODULE;build_battle;options menu time'
+  weather:
+    text: 'Weather'
+    image: 'https://minecraft.wiki/images/Water_Bucket_JE2_BE2.png?format=original'
+    actions:
+      - 'MODULE;build_battle;options menu weather'
+  floor:
+    text: 'Change Floor'
+    actions:
+      - 'MODULE;build_battle;options floor'
+  biome:
+    text: 'Biome'
+    actions:
+      - 'MODULE;build_battle;options biome'
+  particles:
+    text: 'Particles'
+    actions:
+      - 'MODULE;build_battle;options particle menu'
+  heads:
+    text: 'Player Heads'
+    actions:
+      - 'MODULE;build_battle;options heads menu'
+  banner:
+    text: 'Banner Creator'
+    actions:
+      - 'MODULE;build_battle;options banner'
+  reset:
+    text: 'Reset Plot'
+    actions:
+      - 'MODULE;build_battle;options reset'

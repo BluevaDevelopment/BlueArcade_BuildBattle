@@ -1,0 +1,17 @@
+file_version: 1
+menuName: 'Change Weather'
+content:
+  - 'Select weather for your plot.'
+buttons:
+  clear:
+    text: 'Clear'
+    actions:
+      - 'MODULE;build_battle;options weather clear'
+  rain:
+    text: 'Rain'
+    actions:
+      - 'MODULE;build_battle;options weather rain'
+  back:
+    text: 'Back'
+    actions:
+      - 'MODULE;build_battle;options menu main'

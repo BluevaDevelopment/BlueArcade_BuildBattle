@@ -1,0 +1,88 @@
+file_version: 1
+menuName: '<yellow>Change Time</yellow>'
+menuSize: 27
+type: CHEST
+
+items:
+  day:
+    slot: 10
+    name: '<yellow>Day</yellow>'
+    itemStack:
+      material: SUNFLOWER
+      amount: 1
+    lore:
+      - '<gray>Set time to day.</gray>'
+      - '<green>Click to select</green>'
+    actions:
+      - 'MODULE;build_battle;options time day'
+
+  noon:
+    slot: 11
+    name: '<gold>Noon</gold>'
+    itemStack:
+      material: YELLOW_DYE
+      amount: 1
+    lore:
+      - '<gray>Set time to noon.</gray>'
+      - '<green>Click to select</green>'
+    actions:
+      - 'MODULE;build_battle;options time noon'
+
+  sunset:
+    slot: 12
+    name: '<gold>Sunset</gold>'
+    itemStack:
+      material: ORANGE_DYE
+      amount: 1
+    lore:
+      - '<gray>Set time to sunset.</gray>'
+      - '<green>Click to select</green>'
+    actions:
+      - 'MODULE;build_battle;options time sunset'
+
+  night:
+    slot: 13
+    name: '<blue>Night</blue>'
+    itemStack:
+      material: END_ROD
+      amount: 1
+    lore:
+      - '<gray>Set time to night.</gray>'
+      - '<green>Click to select</green>'
+    actions:
+      - 'MODULE;build_battle;options time night'
+
+  midnight:
+    slot: 14
+    name: '<dark_blue>Midnight</dark_blue>'
+    itemStack:
+      material: OBSIDIAN
+      amount: 1
+    lore:
+      - '<gray>Set time to midnight.</gray>'
+      - '<green>Click to select</green>'
+    actions:
+      - 'MODULE;build_battle;options time midnight'
+
+  sunrise:
+    slot: 15
+    name: '<yellow>Sunrise</yellow>'
+    itemStack:
+      material: PINK_DYE
+      amount: 1
+    lore:
+      - '<gray>Set time to sunrise.</gray>'
+      - '<green>Click to select</green>'
+    actions:
+      - 'MODULE;build_battle;options time sunrise'
+
+  back:
+    slot: 22
+    name: '<gray>Back</gray>'
+    itemStack:
+      material: ARROW
+      amount: 1
+    lore:
+      - '<gray>Return to options menu.</gray>'
+    actions:
+      - 'MODULE;build_battle;options menu main'

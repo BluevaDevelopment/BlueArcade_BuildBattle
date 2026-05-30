@@ -1,0 +1,12 @@
+name: Build Battle
+id: build_battle
+version: ${revision}
+type: MINIGAME
+api-version: 3.3
+main: net.blueva.arcade.modules.build_battle.BuildBattleModule
+
+authors:
+  - Blueva
+  - Whiron
+
+description: "Vote for a theme, build within the time limit, and rate each other's creations."

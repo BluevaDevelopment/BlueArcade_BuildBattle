@@ -1,0 +1,112 @@
+file_version: 1
+menuName: '<gold><bold>Build Options</bold></gold>'
+menuSize: 45
+type: CHEST
+
+items:
+  time:
+    slot: 10
+    name: '<yellow>Time of Day</yellow>'
+    itemStack:
+      material: CLOCK
+      amount: 1
+    lore:
+      - "<gray>Change the time for your plot.</gray>"
+      - '<green>Click to open</green>'
+    actions:
+      - 'MODULE;build_battle;options menu time'
+
+  weather:
+    slot: 12
+    name: '<aqua>Weather</aqua>'
+    itemStack:
+      material: WATER_BUCKET
+      amount: 1
+    lore:
+      - "<gray>Change the weather for your plot.</gray>"
+      - '<green>Click to open</green>'
+    actions:
+      - 'MODULE;build_battle;options menu weather'
+
+  floor:
+    slot: 14
+    name: '<gold>Change Floor</gold>'
+    itemStack:
+      material: OAK_PLANKS
+      amount: 1
+    lore:
+      - "<gray>Change your plot floor material.</gray>"
+      - '<green>Click to activate</green>'
+    actions:
+      - 'MODULE;build_battle;options floor'
+
+  biome:
+    slot: 16
+    name: '<dark_green>Biome</dark_green>'
+    itemStack:
+      material: GRASS_BLOCK
+      amount: 1
+    lore:
+      - "<gray>Change the biome of your plot.</gray>"
+      - '<green>Click to open</green>'
+    actions:
+      - 'MODULE;build_battle;options biome'
+
+  particles:
+    slot: 19
+    name: '<light_purple>Particles</light_purple>'
+    itemStack:
+      material: BLAZE_POWDER
+      amount: 1
+    lore:
+      - '<gray>Add decorative particles to your plot.</gray>'
+      - '<green>Click to open</green>'
+    actions:
+      - 'MODULE;build_battle;options particle menu'
+
+  heads:
+    slot: 21
+    name: '<yellow>Player Heads</yellow>'
+    itemStack:
+      material: PLAYER_HEAD
+      amount: 1
+    lore:
+      - '<gray>Get decorative player heads.</gray>'
+      - '<green>Click to open</green>'
+    actions:
+      - 'MODULE;build_battle;options heads menu'
+
+  banner:
+    slot: 23
+    name: '<blue>Banner Creator</blue>'
+    itemStack:
+      material: WHITE_BANNER
+      amount: 1
+    lore:
+      - '<gray>Design custom banners.</gray>'
+      - '<green>Click to open</green>'
+    actions:
+      - 'MODULE;build_battle;options banner'
+
+  reset:
+    slot: 25
+    name: '<red>Reset Plot</red>'
+    itemStack:
+      material: BARRIER
+      amount: 1
+    lore:
+      - "<gray>Clear your plot and reset the floor.</gray>"
+      - '<red>Click to reset</red>'
+    actions:
+      - 'MODULE;build_battle;options reset'
+
+  close:
+    slot: 40
+    name: '<red>Close</red>'
+    itemStack:
+      material: RED_DYE
+      amount: 1
+    lore:
+      - '<gray>Close this menu.</gray>'
+    actions:
+      - 'CLOSE'

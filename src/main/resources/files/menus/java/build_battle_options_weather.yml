@@ -1,0 +1,40 @@
+file_version: 1
+menuName: '<aqua>Change Weather</aqua>'
+menuSize: 27
+type: CHEST
+
+items:
+  clear:
+    slot: 11
+    name: '<yellow>Clear</yellow>'
+    itemStack:
+      material: SUNFLOWER
+      amount: 1
+    lore:
+      - '<gray>Set weather to clear.</gray>'
+      - '<green>Click to select</green>'
+    actions:
+      - 'MODULE;build_battle;options weather clear'
+
+  rain:
+    slot: 15
+    name: '<blue>Rain</blue>'
+    itemStack:
+      material: WATER_BUCKET
+      amount: 1
+    lore:
+      - '<gray>Set weather to rain.</gray>'
+      - '<green>Click to select</green>'
+    actions:
+      - 'MODULE;build_battle;options weather rain'
+
+  back:
+    slot: 22
+    name: '<gray>Back</gray>'
+    itemStack:
+      material: ARROW
+      amount: 1
+    lore:
+      - '<gray>Return to options menu.</gray>'
+    actions:
+      - 'MODULE;build_battle;options menu main'

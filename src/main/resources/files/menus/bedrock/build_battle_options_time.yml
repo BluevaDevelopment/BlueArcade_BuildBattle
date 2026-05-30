@@ -1,0 +1,33 @@
+file_version: 1
+menuName: 'Change Time'
+content:
+  - 'Select a time of day for your plot.'
+buttons:
+  day:
+    text: 'Day'
+    actions:
+      - 'MODULE;build_battle;options time day'
+  noon:
+    text: 'Noon'
+    actions:
+      - 'MODULE;build_battle;options time noon'
+  sunset:
+    text: 'Sunset'
+    actions:
+      - 'MODULE;build_battle;options time sunset'
+  night:
+    text: 'Night'
+    actions:
+      - 'MODULE;build_battle;options time night'
+  midnight:
+    text: 'Midnight'
+    actions:
+      - 'MODULE;build_battle;options time midnight'
+  sunrise:
+    text: 'Sunrise'
+    actions:
+      - 'MODULE;build_battle;options time sunrise'
+  back:
+    text: 'Back'
+    actions:
+      - 'MODULE;build_battle;options menu main'
