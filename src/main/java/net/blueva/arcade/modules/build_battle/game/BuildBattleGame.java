@@ -1,5 +1,6 @@
 package net.blueva.arcade.modules.build_battle.game;
 
+import net.blueva.arcade.api.ModuleAPI;
 import net.blueva.arcade.api.config.CoreConfigAPI;
 import net.blueva.arcade.api.config.ModuleConfigAPI;
 import net.blueva.arcade.api.game.GameContext;
@@ -7,6 +8,7 @@ import net.blueva.arcade.api.game.GamePhase;
 import net.blueva.arcade.api.game.GameResult;
 import net.blueva.arcade.api.module.ModuleInfo;
 import net.blueva.arcade.api.stats.StatsAPI;
+import net.blueva.arcade.api.utils.PlayerUtil;
 import net.blueva.arcade.modules.build_battle.state.ArenaState;
 import net.blueva.arcade.modules.build_battle.state.BuildPhase;
 import net.blueva.arcade.modules.build_battle.state.Plot;
@@ -468,6 +470,35 @@ private void startParticleTask(GameContext<Player, Location, World, Material, It
 
     public Map<Player, Integer> getPlayerArena() {
         return playerArena;
+    }
+
+    public void onPlayerQuit(Player player) {
+        if (player == null) {
+            return;
+        }
+
+        @SuppressWarnings("unchecked")
+        PlayerUtil<Player> playerUtil = (PlayerUtil<Player>) ModuleAPI.getPlayerUtil();
+        Integer waitingArenaId = playerUtil != null ? playerUtil.getPlayerArena(player) : null;
+        if (waitingArenaId == null) {
+            waitingArenaId = playerArena.get(player);
+        }
+        if (voteService != null && waitingArenaId != null) {
+            voteService.clearWaitingVote(waitingArenaId, player.getUniqueId());
+        }
+
+        Integer activeArenaId = playerArena.get(player);
+        if (activeArenaId != null) {
+            ArenaState state = arenas.get(activeArenaId);
+            if (state != null) {
+                VoteState voteState = state.getVoteState();
+                if (voteState != null) {
+                    voteState.clearPlayerVotes(player.getUniqueId());
+                }
+            }
+        }
+
+        playerArena.remove(player);
     }
 
     public void removePlayersFromArena(int arenaId, List<Player> players) {

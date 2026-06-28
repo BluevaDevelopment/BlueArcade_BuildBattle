@@ -13,6 +13,7 @@ import net.blueva.arcade.api.utils.PlayerUtil;
 import net.blueva.arcade.modules.build_battle.game.BuildBattleGame;
 import net.blueva.arcade.modules.build_battle.state.ArenaState;
 import net.blueva.arcade.modules.build_battle.state.VoteState;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -22,11 +23,14 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class BuildBattleVoteService {
@@ -41,7 +45,7 @@ public class BuildBattleVoteService {
     private final ItemAPI<Player, ItemStack, Material> itemAPI;
     private final String moduleId;
     private final BuildBattleVoteMenuRepository menuRepository;
-    private final VoteState waitingVoteState;
+    private final Map<Integer, VoteState> waitingVoteStates = new ConcurrentHashMap<>();
     private BuildBattleGame game;
 
     public BuildBattleVoteService(ModuleConfigAPI moduleConfig,
@@ -54,7 +58,6 @@ public class BuildBattleVoteService {
         this.moduleId = moduleId;
         this.menuRepository = new BuildBattleVoteMenuRepository(moduleConfig);
         this.menuRepository.loadMenus();
-        this.waitingVoteState = createVoteState();
     }
 
     public VoteState createVoteState() {
@@ -66,8 +69,54 @@ public class BuildBattleVoteService {
         return new VoteState(defaultTheme);
     }
 
-    public VoteState getWaitingVoteState() {
-        return waitingVoteState;
+    public VoteState getWaitingVoteState(int arenaId) {
+        return waitingVoteStates.computeIfAbsent(arenaId, id -> createVoteState());
+    }
+
+    public void clearWaitingVote(int arenaId, UUID playerId) {
+        VoteState state = waitingVoteStates.get(arenaId);
+        if (state == null) {
+            return;
+        }
+        state.clearPlayerVotes(playerId);
+        if (state.getVoterIds().isEmpty()) {
+            waitingVoteStates.remove(arenaId);
+        }
+    }
+
+    public void cleanStaleVotes() {
+        @SuppressWarnings("unchecked")
+        PlayerUtil<Player> playerUtil = (PlayerUtil<Player>) ModuleAPI.getPlayerUtil();
+        if (playerUtil == null) {
+            return;
+        }
+
+        for (Map.Entry<Integer, VoteState> entry : new ArrayList<>(waitingVoteStates.entrySet())) {
+            cleanStaleVotesForArena(entry.getValue(), entry.getKey());
+            if (entry.getValue().getVoterIds().isEmpty()) {
+                waitingVoteStates.remove(entry.getKey());
+            }
+        }
+    }
+
+    private void cleanStaleVotesForArena(VoteState state, int arenaId) {
+        @SuppressWarnings("unchecked")
+        PlayerUtil<Player> playerUtil = (PlayerUtil<Player>) ModuleAPI.getPlayerUtil();
+        if (playerUtil == null || state == null) {
+            return;
+        }
+
+        for (UUID playerId : new ArrayList<>(state.getVoterIds())) {
+            Player player = Bukkit.getPlayer(playerId);
+            if (player == null || !player.isOnline()) {
+                state.clearPlayerVotes(playerId);
+                continue;
+            }
+            Integer playerArena = playerUtil.getPlayerArena(player);
+            if (playerArena == null || playerArena != arenaId) {
+                state.clearPlayerVotes(playerId);
+            }
+        }
     }
 
     public void setGame(BuildBattleGame game) {
@@ -83,17 +132,20 @@ public class BuildBattleVoteService {
             return;
         }
 
+        int arenaId = state.getContext().getArenaId();
+        VoteState waiting = getWaitingVoteState(arenaId);
+        cleanStaleVotesForArena(waiting, arenaId);
+
         for (Player player : players) {
             if (player == null) {
                 continue;
             }
-            String theme = waitingVoteState.getPlayerVote(player.getUniqueId());
+            String theme = waiting.getPlayerVote(player.getUniqueId());
             if (theme != null) {
                 voteState.castVote(player.getUniqueId(), theme);
             }
-            waitingVoteState.clearPlayerVotes(player.getUniqueId());
         }
-        waitingVoteState.clearAll();
+        waitingVoteStates.remove(arenaId);
     }
 
     public void registerWaitingItem() {
@@ -226,6 +278,14 @@ public class BuildBattleVoteService {
             return false;
         }
 
+        Integer arenaId = getPlayerArenaId(player);
+        if (arenaId == null) {
+            return true;
+        }
+
+        VoteState waiting = getWaitingVoteState(arenaId);
+        cleanStaleVotesForArena(waiting, arenaId);
+
         String[] safeArgs = args != null ? args : new String[0];
         if (safeArgs.length == 0) {
             return openMenuWaiting(player);
@@ -249,8 +309,8 @@ public class BuildBattleVoteService {
                 return true;
             }
 
-            waitingVoteState.castVote(player.getUniqueId(), theme);
-            broadcastWaitingVote(player, theme, waitingVoteState);
+            waiting.castVote(player.getUniqueId(), theme);
+            broadcastWaitingVote(player, theme, waiting);
             return openMenuWaiting(player);
         }
 
@@ -373,7 +433,13 @@ public class BuildBattleVoteService {
     }
 
     private boolean openMenuWaiting(Player player) {
-        return openMenu(player, waitingVoteState, MENU_THEMES);
+        Integer arenaId = getPlayerArenaId(player);
+        if (arenaId == null) {
+            return openMenu(player, createVoteState(), MENU_THEMES);
+        }
+        VoteState waiting = getWaitingVoteState(arenaId);
+        cleanStaleVotesForArena(waiting, arenaId);
+        return openMenu(player, waiting, MENU_THEMES);
     }
 
     private boolean openMenu(Player player, VoteState voteState, String menuId) {
@@ -403,18 +469,30 @@ public class BuildBattleVoteService {
 
     private String resolveWinningLabel(VoteState voteState) {
         String option = voteState != null ? voteState.resolveWinner() : null;
-        return getThemeLabel(option != null ? option : waitingVoteState.resolveWinner());
+        return getThemeLabel(option != null ? option : moduleConfig.getString("votes.defaults.theme"));
     }
 
     private String resolvePlayerVoteLabel(Player player, VoteState voteState) {
         if (player == null || voteState == null) {
-            return getThemeLabel(waitingVoteState.resolveWinner());
+            return getThemeLabel(moduleConfig.getString("votes.defaults.theme"));
         }
         String option = voteState.getPlayerVote(player.getUniqueId());
         if (option == null) {
-            option = waitingVoteState.resolveWinner();
+            option = voteState.resolveWinner();
         }
         return getThemeLabel(option);
+    }
+
+    private Integer getPlayerArenaId(Player player) {
+        if (player == null) {
+            return null;
+        }
+        @SuppressWarnings("unchecked")
+        PlayerUtil<Player> playerUtil = (PlayerUtil<Player>) ModuleAPI.getPlayerUtil();
+        if (playerUtil == null) {
+            return null;
+        }
+        return playerUtil.getPlayerArena(player);
     }
 
     private Set<String> getValidThemeIds() {

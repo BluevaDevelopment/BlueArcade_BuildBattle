@@ -26,6 +26,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class BuildBattleListener implements Listener {
@@ -251,6 +252,11 @@ public class BuildBattleListener implements Listener {
             game.handleVoteItemClick(context, player, item);
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        game.onPlayerQuit(event.getPlayer());
     }
 
 }

@@ -1,6 +1,7 @@
 package net.blueva.arcade.modules.build_battle.state;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -99,5 +100,9 @@ public class VoteState {
 
     public boolean hasVotes() {
         return !themeVotes.isEmpty() && themeVotes.values().stream().anyMatch(count -> count > 0);
+    }
+
+    public Set<UUID> getVoterIds() {
+        return Set.copyOf(playerVotes.keySet());
     }
 }
