@@ -80,7 +80,7 @@ public class HeadsService {
     }
 
     public void openCategoriesMenu(Player player) {
-        String title = moduleConfig.getStringFrom("language.yml", "options.heads.title");
+        String title = moduleConfig.getTranslation(player, "options.heads.title");
         String legacyTitle = itemAPI != null ? itemAPI.formatInventoryTitle(title) : title;
         int size = ((CATEGORIES.size() + 8) / 9 + 1) * 9;
         size = Math.min(size, 54);
@@ -92,7 +92,7 @@ public class HeadsService {
             inv.setItem(i, item);
         }
 
-        inv.setItem(size - 1, createBackItem());
+        inv.setItem(size - 1, createBackItem(player));
         player.openInventory(inv);
     }
 
@@ -102,7 +102,7 @@ public class HeadsService {
             return;
         }
 
-        String title = moduleConfig.getStringFrom("language.yml", "options.heads.category_title")
+        String title = moduleConfig.getTranslation(player, "options.heads.category_title")
                 .replace("{category}", stripColor(category.displayName()));
         String legacyTitle = itemAPI != null ? itemAPI.formatInventoryTitle(title) : title;
         int size = 54;
@@ -115,7 +115,7 @@ public class HeadsService {
             inv.setItem(i, skull);
         }
 
-        inv.setItem(BACK_SLOT, createBackItem());
+        inv.setItem(BACK_SLOT, createBackItem(player));
         player.openInventory(inv);
     }
 
@@ -131,7 +131,7 @@ public class HeadsService {
             }
         }
 
-        String title = moduleConfig.getStringFrom("language.yml", "options.heads.search_title");
+        String title = moduleConfig.getTranslation(player, "options.heads.search_title");
         String legacyTitle = itemAPI != null ? itemAPI.formatInventoryTitle(title) : title;
         int size = Math.min(54, ((results.size() + 8) / 9 + 1) * 9);
         size = Math.max(size, 27);
@@ -143,7 +143,7 @@ public class HeadsService {
             inv.setItem(i, skull);
         }
 
-        inv.setItem(size - 1, createBackItem());
+        inv.setItem(size - 1, createBackItem(player));
         player.openInventory(inv);
     }
 
@@ -201,8 +201,8 @@ public class HeadsService {
         return decorate(skull, def.displayName(), List.of());
     }
 
-    private ItemStack createBackItem() {
-        String name = moduleConfig.getStringFrom("language.yml", "options.banner.back");
+    private ItemStack createBackItem(Player player) {
+        String name = moduleConfig.getTranslation(player, "options.banner.back");
         return decorate(new ItemStack(Material.ARROW), name, List.of());
     }
 

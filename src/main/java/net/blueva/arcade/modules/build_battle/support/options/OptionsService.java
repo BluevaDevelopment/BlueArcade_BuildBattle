@@ -93,8 +93,8 @@ public class OptionsService {
         if (itemAPI == null || player == null) {
             return;
         }
-        String displayName = moduleConfig.getStringFrom("language.yml", "options.item.name");
-        List<String> lore = moduleConfig.getStringListFrom("language.yml", "options.item.lore");
+        String displayName = moduleConfig.getTranslation(player, "options.item.name");
+        List<String> lore = moduleConfig.getTranslationList(player, "options.item.lore");
         ItemStack item = itemAPI.decorate(new ItemStack(Material.NETHER_STAR), displayName, lore);
         player.getInventory().setItem(OPTIONS_SLOT, item);
     }
@@ -362,7 +362,7 @@ public class OptionsService {
         }
         player.closeInventory();
 
-        String title = moduleConfig.getStringFrom("language.yml", "options.biome.title");
+        String title = moduleConfig.getTranslation(player, "options.biome.title");
         String legacyTitle = itemAPI != null ? itemAPI.formatInventoryTitle(title) : title;
         int size = ((BIOMES.size() - 1) / 9 + 1) * 9;
         size = Math.min(size, 54);
@@ -493,7 +493,7 @@ public class OptionsService {
         if (moduleConfig == null || player == null) {
             return;
         }
-        String message = moduleConfig.getStringFrom("language.yml", path);
+        String message = moduleConfig.getTranslation(player, path);
         if (message != null && !message.isBlank()) {
             @SuppressWarnings("unchecked")
             MessageAPI<Player> messagesAPI = (MessageAPI<Player>) ModuleAPI.getMessagesAPI();

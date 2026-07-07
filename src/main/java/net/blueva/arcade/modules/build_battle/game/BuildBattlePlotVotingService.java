@@ -51,8 +51,8 @@ class BuildBattlePlotVotingService {
             if (!player.isOnline()) {
                 continue;
             }
-            String title = moduleConfig.getStringFrom("language.yml", "titles.voting_started.title");
-            String subtitle = moduleConfig.getStringFrom("language.yml", "titles.voting_started.subtitle");
+            String title = moduleConfig.getTranslation(player, "titles.voting_started.title");
+            String subtitle = moduleConfig.getTranslation(player, "titles.voting_started.subtitle");
             if (title != null && subtitle != null) {
                 context.getTitlesAPI().sendRaw(player, title, subtitle, 0, 30, 10);
             }
@@ -80,7 +80,7 @@ class BuildBattlePlotVotingService {
 
         Player builder = players.get(state.getCurrentPlotIndex());
         if (builder == null || voter.getUniqueId().equals(builder.getUniqueId())) {
-            String msg = moduleConfig.getStringFrom("language.yml", "plot_voting.self_voting_disabled");
+            String msg = moduleConfig.getTranslation(voter, "plot_voting.self_voting_disabled");
             if (msg != null) {
                 context.getMessagesAPI().sendRaw(voter, msg);
             }
@@ -102,7 +102,7 @@ class BuildBattlePlotVotingService {
         state.markVotedCurrentPlot(voter.getUniqueId());
         voter.getInventory().clear();
 
-        String msg = moduleConfig.getStringFrom("language.yml", "plot_voting.vote_cast");
+        String msg = moduleConfig.getTranslation(voter, "plot_voting.vote_cast");
         if (msg != null) {
             context.getMessagesAPI().sendRaw(voter, msg.replace("{rating_name}", ratingName != null ? ratingName : String.valueOf(points)));
         }
@@ -153,7 +153,7 @@ class BuildBattlePlotVotingService {
                 context.getSchedulerAPI().runAtEntity(player, () -> player.teleport(BuildBattlePlotService.centerLocation(targetPlot)));
             }
 
-            String header = moduleConfig.getStringFrom("language.yml", "plot_voting.header");
+            String header = moduleConfig.getTranslation(player, "plot_voting.header");
             if (header != null) {
                 context.getMessagesAPI().sendRaw(player, header.replace("{player}", builder.getName()));
             }
@@ -301,10 +301,10 @@ class BuildBattlePlotVotingService {
                                 ArenaState state) {
         state.setPhase(BuildPhase.ENDED);
 
-        String message = moduleConfig.getStringFrom("language.yml", "plot_voting.voting_ended");
-        if (message != null) {
-            for (Player player : context.getPlayers()) {
-                if (player.isOnline()) {
+        for (Player player : context.getPlayers()) {
+            if (player.isOnline()) {
+                String message = moduleConfig.getTranslation(player, "plot_voting.voting_ended");
+                if (message != null) {
                     context.getMessagesAPI().sendRaw(player, message);
                 }
             }

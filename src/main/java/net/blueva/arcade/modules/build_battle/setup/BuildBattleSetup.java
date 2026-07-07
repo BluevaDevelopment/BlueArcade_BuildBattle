@@ -84,7 +84,7 @@ public class BuildBattleSetup implements GameSetupHandler {
         if ("spawn".equalsIgnoreCase(action)) {
             return handlePlotSpawn(context);
         }
-        context.getMessagesAPI().sendRaw(context.getPlayer(), getSetupMessage("plot.usage"));
+        context.getMessagesAPI().sendRaw(context.getPlayer(), getSetupMessage(context.getPlayer(), "plot.usage"));
         return true;
     }
 
@@ -95,7 +95,7 @@ public class BuildBattleSetup implements GameSetupHandler {
         }
 
         if (!context.getSelection().hasCompleteSelection(player)) {
-            context.getMessagesAPI().sendRaw(player, getSetupMessage("plot.add.must_use_stick"));
+            context.getMessagesAPI().sendRaw(player, getSetupMessage(context.getPlayer(), "plot.add.must_use_stick"));
             return true;
         }
 
@@ -111,7 +111,7 @@ public class BuildBattleSetup implements GameSetupHandler {
         int height = maxY - minY + 1;
 
         if (height < 3) {
-            context.getMessagesAPI().sendRaw(player, getSetupMessage("plot.add.too_shallow"));
+            context.getMessagesAPI().sendRaw(player, getSetupMessage(context.getPlayer(), "plot.add.too_shallow"));
             return true;
         }
 
@@ -122,11 +122,11 @@ public class BuildBattleSetup implements GameSetupHandler {
 
         int floorLayers = countFloorLayers(world, minX, maxX, minY, maxY, minZ, maxZ);
         if (floorLayers == 0) {
-            context.getMessagesAPI().sendRaw(player, getSetupMessage("plot.add.no_floor"));
+            context.getMessagesAPI().sendRaw(player, getSetupMessage(context.getPlayer(), "plot.add.no_floor"));
             return true;
         }
         if (floorLayers > 2) {
-            context.getMessagesAPI().sendRaw(player, getSetupMessage("plot.add.too_many_floor_layers"));
+            context.getMessagesAPI().sendRaw(player, getSetupMessage(context.getPlayer(), "plot.add.too_many_floor_layers"));
             return true;
         }
 
@@ -147,7 +147,7 @@ public class BuildBattleSetup implements GameSetupHandler {
         int z = (int) Math.abs(pos2.getZ() - pos1.getZ()) + 1;
         int blocks = x * y * z;
 
-        String msg = getSetupMessage("plot.add.set")
+        String msg = getSetupMessage(context.getPlayer(), "plot.add.set")
                 .replace("{index}", String.valueOf(newPlotNumber))
                 .replace("{blocks}", String.valueOf(blocks))
                 .replace("{x}", String.valueOf(x))
@@ -156,7 +156,7 @@ public class BuildBattleSetup implements GameSetupHandler {
                 .replace("{floor}", floorMaterial.name());
         context.getMessagesAPI().sendRaw(player, msg);
 
-        String spawnMsg = getSetupMessage("plot.add.spawn_set");
+        String spawnMsg = getSetupMessage(context.getPlayer(), "plot.add.spawn_set");
         if (spawnMsg != null && !spawnMsg.isEmpty()) {
             context.getMessagesAPI().sendRaw(player, spawnMsg.replace("{index}", String.valueOf(newPlotNumber)));
         }
@@ -166,7 +166,7 @@ public class BuildBattleSetup implements GameSetupHandler {
     private boolean handlePlotSet(SetupContext<Player, CommandSender, Location> context) {
         String idArg = context.getHandlerArg(1);
         if (idArg == null) {
-            context.getMessagesAPI().sendRaw(context.getPlayer(), getSetupMessage("plot.set.usage"));
+            context.getMessagesAPI().sendRaw(context.getPlayer(), getSetupMessage(context.getPlayer(), "plot.set.usage"));
             return true;
         }
 
@@ -181,7 +181,7 @@ public class BuildBattleSetup implements GameSetupHandler {
         }
 
         if (!context.getSelection().hasCompleteSelection(player)) {
-            context.getMessagesAPI().sendRaw(player, getSetupMessage("plot.add.must_use_stick"));
+            context.getMessagesAPI().sendRaw(player, getSetupMessage(context.getPlayer(), "plot.add.must_use_stick"));
             return true;
         }
 
@@ -197,7 +197,7 @@ public class BuildBattleSetup implements GameSetupHandler {
         int height = maxY - minY + 1;
 
         if (height < 3) {
-            context.getMessagesAPI().sendRaw(player, getSetupMessage("plot.add.too_shallow"));
+            context.getMessagesAPI().sendRaw(player, getSetupMessage(context.getPlayer(), "plot.add.too_shallow"));
             return true;
         }
 
@@ -208,11 +208,11 @@ public class BuildBattleSetup implements GameSetupHandler {
 
         int floorLayers = countFloorLayers(world, minX, maxX, minY, maxY, minZ, maxZ);
         if (floorLayers == 0) {
-            context.getMessagesAPI().sendRaw(player, getSetupMessage("plot.add.no_floor"));
+            context.getMessagesAPI().sendRaw(player, getSetupMessage(context.getPlayer(), "plot.add.no_floor"));
             return true;
         }
         if (floorLayers > 2) {
-            context.getMessagesAPI().sendRaw(player, getSetupMessage("plot.add.too_many_floor_layers"));
+            context.getMessagesAPI().sendRaw(player, getSetupMessage(context.getPlayer(), "plot.add.too_many_floor_layers"));
             return true;
         }
 
@@ -230,7 +230,7 @@ public class BuildBattleSetup implements GameSetupHandler {
         int z = (int) Math.abs(pos2.getZ() - pos1.getZ()) + 1;
         int blocks = x * y * z;
 
-        String msg = getSetupMessage("plot.set.success")
+        String msg = getSetupMessage(context.getPlayer(), "plot.set.success")
                 .replace("{index}", String.valueOf(plotId))
                 .replace("{blocks}", String.valueOf(blocks))
                 .replace("{x}", String.valueOf(x))
@@ -244,7 +244,7 @@ public class BuildBattleSetup implements GameSetupHandler {
     private boolean handlePlotRemove(SetupContext<Player, CommandSender, Location> context) {
         String idArg = context.getHandlerArg(1);
         if (idArg == null) {
-            context.getMessagesAPI().sendRaw(context.getPlayer(), getSetupMessage("plot.remove.usage"));
+            context.getMessagesAPI().sendRaw(context.getPlayer(), getSetupMessage(context.getPlayer(), "plot.remove.usage"));
             return true;
         }
 
@@ -283,7 +283,7 @@ public class BuildBattleSetup implements GameSetupHandler {
         context.getData().setInt("game.plots.total", totalPlots - 1);
         context.getData().save();
 
-        String msg = getSetupMessage("plot.remove.success")
+        String msg = getSetupMessage(context.getPlayer(), "plot.remove.success")
                 .replace("{index}", String.valueOf(plotId));
         context.getMessagesAPI().sendRaw(context.getPlayer(), msg);
         return true;
@@ -292,13 +292,13 @@ public class BuildBattleSetup implements GameSetupHandler {
     private boolean handlePlotSpawn(SetupContext<Player, CommandSender, Location> context) {
         String action = context.getHandlerArg(1);
         if (!"set".equalsIgnoreCase(action)) {
-            context.getMessagesAPI().sendRaw(context.getPlayer(), getSetupMessage("plot.spawn.usage"));
+            context.getMessagesAPI().sendRaw(context.getPlayer(), getSetupMessage(context.getPlayer(), "plot.spawn.usage"));
             return true;
         }
 
         String idArg = context.getHandlerArg(2);
         if (idArg == null) {
-            context.getMessagesAPI().sendRaw(context.getPlayer(), getSetupMessage("plot.spawn.usage"));
+            context.getMessagesAPI().sendRaw(context.getPlayer(), getSetupMessage(context.getPlayer(), "plot.spawn.usage"));
             return true;
         }
 
@@ -312,7 +312,7 @@ public class BuildBattleSetup implements GameSetupHandler {
         context.getData().setLocation(basePath + ".spawn", loc);
         context.getData().save();
 
-        String msg = getSetupMessage("plot.spawn.set")
+        String msg = getSetupMessage(context.getPlayer(), "plot.spawn.set")
                 .replace("{index}", String.valueOf(plotId));
         context.getMessagesAPI().sendRaw(context.getPlayer(), msg);
         return true;
@@ -323,12 +323,12 @@ public class BuildBattleSetup implements GameSetupHandler {
             int plotId = Integer.parseInt(idArg);
             int totalPlots = context.getData().getInt("game.plots.total", 0);
             if (plotId < 1 || plotId > totalPlots) {
-                context.getMessagesAPI().sendRaw(context.getPlayer(), getSetupMessage("plot.not_found"));
+                context.getMessagesAPI().sendRaw(context.getPlayer(), getSetupMessage(context.getPlayer(), "plot.not_found"));
                 return -1;
             }
             return plotId;
         } catch (NumberFormatException e) {
-            context.getMessagesAPI().sendRaw(context.getPlayer(), getSetupMessage("plot.invalid_id"));
+            context.getMessagesAPI().sendRaw(context.getPlayer(), getSetupMessage(context.getPlayer(), "plot.invalid_id"));
             return -1;
         }
     }
@@ -363,8 +363,8 @@ public class BuildBattleSetup implements GameSetupHandler {
         return Material.GRASS_BLOCK;
     }
 
-    private String getSetupMessage(String key) {
-        String message = moduleConfig.getStringFrom("language.yml", "setup_messages." + key);
+    private String getSetupMessage(Player player, String key) {
+        String message = moduleConfig.getTranslation(player, "setup_messages." + key);
         if (message == null) {
             return "";
         }

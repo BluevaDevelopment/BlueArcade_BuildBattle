@@ -87,7 +87,7 @@ public class ParticleService {
     }
 
     public void openParticleMenu(Player player) {
-        String title = moduleConfig.getStringFrom("language.yml", "options.particle.title");
+        String title = moduleConfig.getTranslation(player, "options.particle.title");
         String legacyTitle = itemAPI != null ? itemAPI.formatInventoryTitle(title) : title;
         Inventory inv = Bukkit.createInventory(new ParticleMenuHolder(ParticleMenuHolder.Type.SELECT), 54, legacyTitle);
 
@@ -106,7 +106,7 @@ public class ParticleService {
             inv.setItem(slot++, item);
         }
 
-        inv.setItem(BACK_SLOT, createBackItem());
+        inv.setItem(BACK_SLOT, createBackItem(player));
         inv.setItem(REMOVE_SLOT, createRemoveItem());
         player.openInventory(inv);
     }
@@ -123,7 +123,7 @@ public class ParticleService {
         }
 
         List<PlotParticle> particles = state.getPlotParticles(player.getUniqueId());
-        String title = moduleConfig.getStringFrom("language.yml", "options.particle.title") + " - Remove";
+        String title = moduleConfig.getTranslation(player, "options.particle.title") + " - Remove";
         String legacyTitle = itemAPI != null ? itemAPI.formatInventoryTitle(title) : title;
         int size = Math.min(54, ((particles.size() + 8) / 9) * 9 + 9);
         size = Math.max(size, 27);
@@ -145,7 +145,7 @@ public class ParticleService {
             inv.setItem(i, item);
         }
 
-        inv.setItem(size - 1, createBackItem());
+        inv.setItem(size - 1, createBackItem(player));
         player.openInventory(inv);
     }
 
@@ -217,11 +217,11 @@ public class ParticleService {
         return null;
     }
 
-    private ItemStack createBackItem() {
+    private ItemStack createBackItem(Player player) {
         ItemStack item = new ItemStack(Material.ARROW);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            String name = moduleConfig.getStringFrom("language.yml", "options.banner.back");
+            String name = moduleConfig.getTranslation(player, "options.banner.back");
             meta.setDisplayName(itemAPI != null ? itemAPI.formatDisplayName(name) : name);
             item.setItemMeta(meta);
         }
@@ -255,7 +255,7 @@ public class ParticleService {
 
     private void sendMessage(Player player, String path) {
         if (moduleConfig == null || player == null) return;
-        String message = moduleConfig.getStringFrom("language.yml", path);
+        String message = moduleConfig.getTranslation(player, path);
         if (message != null && !message.isBlank()) {
             @SuppressWarnings("unchecked")
             MessageAPI<Player> messagesAPI = (MessageAPI<Player>) ModuleAPI.getMessagesAPI();

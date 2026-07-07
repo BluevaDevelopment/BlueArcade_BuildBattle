@@ -1,10 +1,17 @@
-file_version: 1
+#  ____  _               _                      _
+# | __ )| |_   _  ___   / \   _ __ ___ __ _  __| | ___
+# |  _ \| | | | |/ _ \ / _ \ | '__/ __/ _` |/ _` |/ _ \
+# | |_) | | |_| |  __// ___ \| | | (_| (_| | (_| |  __/
+# |____/|_|\__,_|\___/_/   \_|_|  \___\__,_|\__,_|\___|
+#
+# [!] Arcade by Blueva | https://blueva.net/store/blue-arcade [!]
+
 category:
-  id: build_battle
+  id: "build_battle"
   name: "Build Battle"
   description:
     - "Achievements tied to Build Battle."
-  icon: CRAFTING_TABLE
+  icon: "CRAFTING_TABLE"
   sort_order: 30
 
 achievements:
@@ -12,7 +19,7 @@ achievements:
     name: "Builder"
     description:
       - "Play Build Battle matches."
-    icon: CRAFTING_TABLE
+    icon: "CRAFTING_TABLE"
     phases:
       1:
         name: "First Draft"
@@ -84,7 +91,7 @@ achievements:
     name: "Point Collector"
     description:
       - "Earn points in Build Battle."
-    icon: NETHER_STAR
+    icon: "NETHER_STAR"
     phases:
       1:
         name: "Getting Noticed"
@@ -156,7 +163,7 @@ achievements:
     name: "Winner Path"
     description:
       - "Win Build Battle matches."
-    icon: GOLD_BLOCK
+    icon: "GOLD_BLOCK"
     phases:
       1:
         name: "First Win"

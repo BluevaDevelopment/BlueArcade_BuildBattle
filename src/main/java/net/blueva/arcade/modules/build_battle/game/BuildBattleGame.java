@@ -119,10 +119,10 @@ public class BuildBattleGame {
                 continue;
             }
             context.getSoundsAPI().play(player, coreConfig.getSound("sounds.starting_game.countdown"));
-            String title = coreConfig.getLanguage("titles.starting_game.title")
+            String title = coreConfig.getLanguage(player, "titles.starting_game.title")
                     .replace("{game_display_name}", moduleInfo.getName())
                     .replace("{time}", String.valueOf(secondsLeft));
-            String subtitle = coreConfig.getLanguage("titles.starting_game.subtitle")
+            String subtitle = coreConfig.getLanguage(player, "titles.starting_game.subtitle")
                     .replace("{game_display_name}", moduleInfo.getName())
                     .replace("{time}", String.valueOf(secondsLeft));
             context.getTitlesAPI().sendRaw(player, title, subtitle, 0, 20, 5);
@@ -177,8 +177,8 @@ public class BuildBattleGame {
                 }
             }, 2L);
 
-            String title = moduleConfig.getStringFrom("language.yml", "titles.theme_reveal.title");
-            String subtitle = moduleConfig.getStringFrom("language.yml", "titles.theme_reveal.subtitle");
+            String title = moduleConfig.getTranslation(player, "titles.theme_reveal.title");
+            String subtitle = moduleConfig.getTranslation(player, "titles.theme_reveal.subtitle");
             if (title != null && subtitle != null) {
                 context.getTitlesAPI().sendRaw(player,
                         title.replace("{theme}", theme),
@@ -186,7 +186,7 @@ public class BuildBattleGame {
                         0, 40, 20);
             }
 
-            String broadcast = moduleConfig.getStringFrom("language.yml", "build.theme_broadcast");
+            String broadcast = moduleConfig.getTranslation(player, "build.theme_broadcast");
             if (broadcast != null) {
                 context.getMessagesAPI().sendRaw(player, broadcast.replace("{theme}", theme));
             }
@@ -248,16 +248,11 @@ public class BuildBattleGame {
 
     private void broadcastTimeMessage(GameContext<Player, Location, World, Material, ItemStack, Sound, Block, Entity> context,
                                       String path, int seconds) {
-        String template = moduleConfig.getStringFrom("language.yml", path);
+        String template = moduleConfig.getTranslation(null, path);
         if (template == null || template.isBlank()) {
             return;
         }
-        int minutes = seconds / 60;
-        int secs = seconds % 60;
-        String timeStr = minutes > 0
-                ? minutes + "m " + secs + "s"
-                : secs + "s";
-        String message = template.replace("{time}", timeStr);
+        String message = template.replace("{time}", String.valueOf(seconds));
         for (Player player : context.getPlayers()) {
             if (player.isOnline()) {
                 context.getMessagesAPI().sendRaw(player, message);
@@ -300,13 +295,13 @@ public class BuildBattleGame {
                 optionsService.removeOptionsItem(player);
             }
 
-            String title = moduleConfig.getStringFrom("language.yml", "titles.build_ended.title");
-            String subtitle = moduleConfig.getStringFrom("language.yml", "titles.build_ended.subtitle");
+            String title = moduleConfig.getTranslation(player, "titles.build_ended.title");
+            String subtitle = moduleConfig.getTranslation(player, "titles.build_ended.subtitle");
             if (title != null && subtitle != null) {
                 context.getTitlesAPI().sendRaw(player, title, subtitle, 0, 30, 10);
             }
 
-            String message = moduleConfig.getStringFrom("language.yml", "build.build_ended");
+            String message = moduleConfig.getTranslation(player, "build.build_ended");
             if (message != null) {
                 context.getMessagesAPI().sendRaw(player, message);
             }
@@ -452,7 +447,7 @@ private void startParticleTask(GameContext<Player, Location, World, Material, It
         }
         if (state.getPhase() == BuildPhase.BUILDING) {
             placeholders.put("theme", state.getSelectedTheme());
-            placeholders.put("time", String.valueOf(state.getBuildTimeLeft()));
+            placeholders.put("time", formatCountdownTime(state.getBuildTimeLeft()));
         } else if (state.getPhase() == BuildPhase.PLOT_VOTING) {
             List<Player> players = new ArrayList<>(context.getPlayers());
             int current = Math.min(state.getCurrentPlotIndex() + 1, players.size());
@@ -591,4 +586,10 @@ private void startParticleTask(GameContext<Player, Location, World, Material, It
             return null;
         }
     }
+
+    private static String formatCountdownTime(int seconds) {
+        int safeSeconds = Math.max(0, seconds);
+        return String.format("%02d:%02d", safeSeconds / 60, safeSeconds % 60);
+    }
+
 }

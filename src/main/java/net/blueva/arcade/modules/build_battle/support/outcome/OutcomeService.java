@@ -107,11 +107,6 @@ public class OutcomeService {
 
     private void sendResultMessages(GameContext<Player, Location, World, Material, ItemStack, Sound, Block, Entity> context,
                                     List<Map.Entry<UUID, Integer>> sorted) {
-        List<String> lines = game.getModuleConfig().getStringListFrom("language.yml", "messages.result_lines");
-        if (lines == null || lines.isEmpty()) {
-            return;
-        }
-
         Map<String, String> basePlaceholders = new HashMap<>();
         for (int i = 0; i < 5; i++) {
             int rank = i + 1;
@@ -127,6 +122,10 @@ public class OutcomeService {
 
         for (Player player : context.getPlayers()) {
             if (!player.isOnline()) {
+                continue;
+            }
+            List<String> lines = game.getModuleConfig().getTranslationList(player, "messages.result_lines");
+            if (lines == null || lines.isEmpty()) {
                 continue;
             }
             Map<String, String> playerPlaceholders = new HashMap<>(basePlaceholders);
@@ -174,6 +173,10 @@ public class OutcomeService {
             if (!player.isOnline()) {
                 continue;
             }
+            List<String> lines = game.getModuleConfig().getTranslationList(player, "messages.result_lines");
+            if (lines == null || lines.isEmpty()) {
+                continue;
+            }
             Map<String, String> playerPlaceholders = new HashMap<>(basePlaceholders);
 
             int playerPos = 0;
@@ -198,13 +201,13 @@ public class OutcomeService {
         if (winner == null) {
             return;
         }
-        String title = game.getModuleConfig().getStringFrom("language.yml", "titles.winner.title");
-        String subtitle = game.getModuleConfig().getStringFrom("language.yml", "titles.winner.subtitle");
-        if (title == null || subtitle == null) {
-            return;
-        }
         for (Player player : context.getPlayers()) {
             if (player.isOnline()) {
+                String title = game.getModuleConfig().getTranslation(player, "titles.winner.title");
+                String subtitle = game.getModuleConfig().getTranslation(player, "titles.winner.subtitle");
+                if (title == null || subtitle == null) {
+                    continue;
+                }
                 context.getTitlesAPI().sendRaw(player, title,
                         subtitle.replace("{player}", winner.getName()), 0, 40, 20);
             }

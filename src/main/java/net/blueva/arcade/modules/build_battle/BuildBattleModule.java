@@ -37,6 +37,11 @@ import org.bukkit.inventory.ItemStack;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import net.blueva.arcade.api.setup.ModuleSetupCommand;
+import net.blueva.arcade.api.setup.ModuleSetupMetadata;
+import net.blueva.arcade.api.setup.ModuleSetupStep;
+import net.blueva.arcade.api.setup.ModuleSetupStatusCheck;
+import java.util.List;
 
 public class BuildBattleModule implements GameModule<Player, Location, World, Material, ItemStack, Sound, Block, Entity, Listener, EventPriority> {
 
@@ -119,8 +124,8 @@ public class BuildBattleModule implements GameModule<Player, Location, World, Ma
             voteMenu.registerGame(
                     moduleInfo.getId(),
                     material,
-                    moduleConfig.getStringFrom("language.yml", "vote_menu.name"),
-                    moduleConfig.getStringListFrom("language.yml", "vote_menu.lore")
+                    moduleConfig.getTranslation(null, "vote_menu.name"),
+                    moduleConfig.getTranslationList(null, "vote_menu.lore")
             );
         }
     }
@@ -203,10 +208,9 @@ public class BuildBattleModule implements GameModule<Player, Location, World, Ma
     }
 
     private void registerConfigs() {
-        moduleConfig.register("language.yml", 1);
-        moduleConfig.register("settings.yml", 1);
-        moduleConfig.register("achievements.yml", 1);
-        moduleConfig.register("store.yml", 1);
+        moduleConfig.register("settings.yml");
+        moduleConfig.register("achievements.yml");
+        moduleConfig.register("store.yml");
         registerMenuConfigSafe("menus/java/build_battle_options_main.yml", 1);
         registerMenuConfigSafe("menus/java/build_battle_options_time.yml", 1);
         registerMenuConfigSafe("menus/java/build_battle_options_weather.yml", 1);
@@ -229,17 +233,17 @@ public class BuildBattleModule implements GameModule<Player, Location, World, Ma
         }
 
         statsAPI.registerModuleStat(moduleInfo.getId(),
-                new StatDefinition("wins", moduleConfig.getStringFrom("language.yml", "stats.labels.wins"),
-                        moduleConfig.getStringFrom("language.yml", "stats.descriptions.wins"), StatScope.MODULE));
+                new StatDefinition("wins", moduleConfig.getTranslation(null, "stats.labels.wins"),
+                        moduleConfig.getTranslation(null, "stats.descriptions.wins"), StatScope.MODULE));
         statsAPI.registerModuleStat(moduleInfo.getId(),
-                new StatDefinition("games_played", moduleConfig.getStringFrom("language.yml", "stats.labels.games_played"),
-                        moduleConfig.getStringFrom("language.yml", "stats.descriptions.games_played"), StatScope.MODULE));
+                new StatDefinition("games_played", moduleConfig.getTranslation(null, "stats.labels.games_played"),
+                        moduleConfig.getTranslation(null, "stats.descriptions.games_played"), StatScope.MODULE));
         statsAPI.registerModuleStat(moduleInfo.getId(),
-                new StatDefinition("points_total", moduleConfig.getStringFrom("language.yml", "stats.labels.points_total"),
-                        moduleConfig.getStringFrom("language.yml", "stats.descriptions.points_total"), StatScope.MODULE));
+                new StatDefinition("points_total", moduleConfig.getTranslation(null, "stats.labels.points_total"),
+                        moduleConfig.getTranslation(null, "stats.descriptions.points_total"), StatScope.MODULE));
         statsAPI.registerModuleStat(moduleInfo.getId(),
-                new StatDefinition("points_highest", moduleConfig.getStringFrom("language.yml", "stats.labels.points_highest"),
-                        moduleConfig.getStringFrom("language.yml", "stats.descriptions.points_highest"), StatScope.MODULE));
+                new StatDefinition("points_highest", moduleConfig.getTranslation(null, "stats.labels.points_highest"),
+                        moduleConfig.getTranslation(null, "stats.descriptions.points_highest"), StatScope.MODULE));
     }
 
     private void registerAchievements() {
@@ -248,4 +252,32 @@ public class BuildBattleModule implements GameModule<Player, Location, World, Ma
             achievementsAPI.registerModuleAchievements(moduleInfo.getId(), "achievements.yml");
         }
     }
+
+    @Override
+    public ModuleSetupMetadata getSetupMetadata() {
+        return new ModuleSetupMetadata() {
+
+            @Override
+            public List<ModuleSetupStep> getSetupSteps() {
+                return List.of(
+                        new ModuleSetupStep("plot", true, "Configure Plot", "Configure the module-specific plot setup data.", List.of("/baa game <arena> build_battle plot"), "plot region and spawn")
+                );
+            }
+
+            @Override
+            public List<ModuleSetupCommand> getSetupCommands() {
+                return List.of(
+                        new ModuleSetupCommand("plot", "/baa game <arena> build_battle plot", "Configure plot setup data.", true)
+                );
+            }
+
+            @Override
+            public List<ModuleSetupStatusCheck<?, ?, ?>> getStatusChecks() {
+                return List.of(
+                        new ModuleSetupStatusCheck<>("plot", true, "Create at least one plot.", context -> context.getData().getInt("game.plots.total", 0) > 0 || context.getData().has("game.plot.bounds.min.x"))
+                );
+            }
+        };
+    }
+
 }

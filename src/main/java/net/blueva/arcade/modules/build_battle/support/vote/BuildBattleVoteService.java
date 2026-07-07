@@ -243,7 +243,7 @@ public class BuildBattleVoteService {
                 return true;
             }
             if (!hasThemePermission(player, theme)) {
-                String message = moduleConfig.getStringFrom("language.yml", "votes.messages.no_permission");
+                String message = moduleConfig.getTranslation(player, "votes.messages.no_permission");
                 if (message != null) {
                     message = message.replace("{theme}", getThemeLabel(theme));
                     context.getMessagesAPI().sendRaw(player, message);
@@ -259,7 +259,7 @@ public class BuildBattleVoteService {
             voteState.castVote(player.getUniqueId(), theme);
 
             String themeLabel = getThemeLabel(theme);
-            String message = moduleConfig.getStringFrom("language.yml", "votes.messages.broadcast");
+            String message = moduleConfig.getTranslation(player, "votes.messages.broadcast");
             if (message != null && !message.isBlank()) {
                 int voteCount = voteState.getVotes(theme);
                 message = message.replace("{player}", player.getName())
@@ -354,10 +354,10 @@ public class BuildBattleVoteService {
         String themeLabel = getThemeLabel(theme);
 
         String source = voteState.hasVotes() ?
-                moduleConfig.getStringFrom("language.yml", "votes.messages.selected.sources.popular") :
-                moduleConfig.getStringFrom("language.yml", "votes.messages.selected.sources.default");
+                moduleConfig.getTranslation(null, "votes.messages.selected.sources.popular") :
+                moduleConfig.getTranslation(null, "votes.messages.selected.sources.default");
 
-        String message = moduleConfig.getStringFrom("language.yml", "votes.messages.selected.theme");
+        String message = moduleConfig.getTranslation(null, "votes.messages.selected.theme");
         if (message != null && !message.isBlank()) {
             message = message.replace("{theme}", themeLabel)
                     .replace("{source}", source);
@@ -370,7 +370,7 @@ public class BuildBattleVoteService {
             return;
         }
 
-        String message = moduleConfig.getStringFrom("language.yml", "votes.messages.broadcast");
+        String message = moduleConfig.getTranslation(player, "votes.messages.broadcast");
         if (message == null || message.isBlank()) {
             return;
         }
@@ -547,7 +547,7 @@ public class BuildBattleVoteService {
         if (context == null || player == null || messagePath == null) {
             return;
         }
-        String message = moduleConfig.getStringFrom("language.yml", messagePath);
+        String message = moduleConfig.getTranslation(player, messagePath);
         if (message != null && !message.isBlank()) {
             context.getMessagesAPI().sendRaw(player, message);
         }

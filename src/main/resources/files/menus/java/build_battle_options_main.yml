@@ -1,14 +1,21 @@
-file_version: 1
+#  ____  _               _                      _
+# | __ )| |_   _  ___   / \   _ __ ___ __ _  __| | ___
+# |  _ \| | | | |/ _ \ / _ \ | '__/ __/ _` |/ _` |/ _ \
+# | |_) | | |_| |  __// ___ \| | | (_| (_| | (_| |  __/
+# |____/|_|\__,_|\___/_/   \_|_|  \___\__,_|\__,_|\___|
+#
+# [!] Arcade by Blueva | https://blueva.net/store/blue-arcade [!]
+
 menuName: '<gold><bold>Build Options</bold></gold>'
 menuSize: 45
-type: CHEST
+type: "CHEST"
 
 items:
   time:
     slot: 10
     name: '<yellow>Time of Day</yellow>'
     itemStack:
-      material: CLOCK
+      material: "CLOCK"
       amount: 1
     lore:
       - "<gray>Change the time for your plot.</gray>"
@@ -20,7 +27,7 @@ items:
     slot: 12
     name: '<aqua>Weather</aqua>'
     itemStack:
-      material: WATER_BUCKET
+      material: "WATER_BUCKET"
       amount: 1
     lore:
       - "<gray>Change the weather for your plot.</gray>"
@@ -32,7 +39,7 @@ items:
     slot: 14
     name: '<gold>Change Floor</gold>'
     itemStack:
-      material: OAK_PLANKS
+      material: "OAK_PLANKS"
       amount: 1
     lore:
       - "<gray>Change your plot floor material.</gray>"
@@ -44,7 +51,7 @@ items:
     slot: 16
     name: '<dark_green>Biome</dark_green>'
     itemStack:
-      material: GRASS_BLOCK
+      material: "GRASS_BLOCK"
       amount: 1
     lore:
       - "<gray>Change the biome of your plot.</gray>"
@@ -56,7 +63,7 @@ items:
     slot: 19
     name: '<light_purple>Particles</light_purple>'
     itemStack:
-      material: BLAZE_POWDER
+      material: "BLAZE_POWDER"
       amount: 1
     lore:
       - '<gray>Add decorative particles to your plot.</gray>'
@@ -68,7 +75,7 @@ items:
     slot: 21
     name: '<yellow>Player Heads</yellow>'
     itemStack:
-      material: PLAYER_HEAD
+      material: "PLAYER_HEAD"
       amount: 1
     lore:
       - '<gray>Get decorative player heads.</gray>'
@@ -80,7 +87,7 @@ items:
     slot: 23
     name: '<blue>Banner Creator</blue>'
     itemStack:
-      material: WHITE_BANNER
+      material: "WHITE_BANNER"
       amount: 1
     lore:
       - '<gray>Design custom banners.</gray>'
@@ -92,7 +99,7 @@ items:
     slot: 25
     name: '<red>Reset Plot</red>'
     itemStack:
-      material: BARRIER
+      material: "BARRIER"
       amount: 1
     lore:
       - "<gray>Clear your plot and reset the floor.</gray>"
@@ -104,7 +111,7 @@ items:
     slot: 40
     name: '<red>Close</red>'
     itemStack:
-      material: RED_DYE
+      material: "RED_DYE"
       amount: 1
     lore:
       - '<gray>Close this menu.</gray>'

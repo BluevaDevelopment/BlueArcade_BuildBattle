@@ -1,16 +1,22 @@
-# Build Battle Module Settings
+#  ____  _               _                      _
+# | __ )| |_   _  ___   / \   _ __ ___ __ _  __| | ___
+# |  _ \| | | | |/ _ \ / _ \ | '__/ __/ _` |/ _` |/ _ \
+# | |_) | | |_| |  __// ___ \| | | (_| (_| | (_| |  __/
+# |____/|_|\__,_|\___/_/   \_|_|  \___\__,_|\__,_|\___|
+#
+# [!] Arcade by Blueva | https://blueva.net/store/blue-arcade [!]
 
-file_version: 1
+# Build Battle Module Settings
 
 # Visual representation in core vote menu
 menus:
   vote:
-    item: CRAFTING_TABLE
+    item: "CRAFTING_TABLE"
 
 waiting_items:
   vote_theme:
     enabled: true
-    material: PAPER
+    material: "PAPER"
     slot: 1
     display_name: "<aqua>Vote Theme</aqua>"
     lore:
@@ -18,7 +24,7 @@ waiting_items:
 
 votes:
   defaults:
-    theme: random
+    theme: "random"
 
 # Configurable build themes. Each entry is the display name.
 # The menu is generated dynamically from this list.
@@ -47,7 +53,7 @@ particles:
 vote_items:
   super_poop:
     enabled: true
-    material: RED_TERRACOTTA
+    material: "RED_TERRACOTTA"
     slot: 0
     display_name: "<dark_red><bold>SUPER POOP</bold></dark_red>"
     lore:
@@ -55,7 +61,7 @@ vote_items:
     points: 1
   poop:
     enabled: true
-    material: PINK_TERRACOTTA
+    material: "PINK_TERRACOTTA"
     slot: 1
     display_name: "<red><bold>POOP</bold></red>"
     lore:
@@ -63,7 +69,7 @@ vote_items:
     points: 2
   ok:
     enabled: true
-    material: LIME_TERRACOTTA
+    material: "LIME_TERRACOTTA"
     slot: 2
     display_name: "<green><bold>OK</bold></green>"
     lore:
@@ -71,7 +77,7 @@ vote_items:
     points: 3
   good:
     enabled: true
-    material: GREEN_TERRACOTTA
+    material: "GREEN_TERRACOTTA"
     slot: 3
     display_name: "<dark_green><bold>GOOD</bold></dark_green>"
     lore:
@@ -79,7 +85,7 @@ vote_items:
     points: 4
   awesome:
     enabled: true
-    material: BLUE_TERRACOTTA
+    material: "BLUE_TERRACOTTA"
     slot: 4
     display_name: "<blue><bold>AWESOME</bold></blue>"
     lore:
@@ -87,7 +93,7 @@ vote_items:
     points: 5
   god:
     enabled: true
-    material: YELLOW_TERRACOTTA
+    material: "YELLOW_TERRACOTTA"
     slot: 5
     display_name: "<gold><bold>GOD</bold></gold>"
     lore:

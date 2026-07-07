@@ -37,7 +37,7 @@ public class BannerCreatorService {
         BannerBuilderState state = new BannerBuilderState();
         playerStates.put(player, state);
 
-        String title = moduleConfig.getStringFrom("language.yml", "options.banner.color_title");
+        String title = moduleConfig.getTranslation(player, "options.banner.color_title");
         String legacyTitle = itemAPI != null ? itemAPI.formatInventoryTitle(title) : title;
         Inventory inv = Bukkit.createInventory(new BannerMenuHolder(state, BannerMenuHolder.Stage.BASE), 54, legacyTitle);
 
@@ -49,15 +49,15 @@ public class BannerCreatorService {
             inv.setItem(slot++, item);
         }
 
-        inv.setItem(BACK_SLOT, createBackItem());
-        inv.setItem(CREATE_SLOT, createCreateItem(state));
+        inv.setItem(BACK_SLOT, createBackItem(player));
+        inv.setItem(CREATE_SLOT, createCreateItem(player, state));
         player.openInventory(inv);
     }
 
     public void openLayerMenu(Player player, BannerBuilderState state) {
         playerStates.put(player, state);
 
-        String title = moduleConfig.getStringFrom("language.yml", "options.banner.layer_title");
+        String title = moduleConfig.getTranslation(player, "options.banner.layer_title");
         String legacyTitle = itemAPI != null ? itemAPI.formatInventoryTitle(title) : title;
         Inventory inv = Bukkit.createInventory(new BannerMenuHolder(state, BannerMenuHolder.Stage.LAYER), 54, legacyTitle);
 
@@ -83,15 +83,15 @@ public class BannerCreatorService {
             inv.setItem(slot++, preview);
         }
 
-        inv.setItem(BACK_SLOT, createBackItem());
-        inv.setItem(CREATE_SLOT, createCreateItem(state));
+        inv.setItem(BACK_SLOT, createBackItem(player));
+        inv.setItem(CREATE_SLOT, createCreateItem(player, state));
         player.openInventory(inv);
     }
 
     public void openLayerColorMenu(Player player, BannerBuilderState state) {
         playerStates.put(player, state);
 
-        String title = moduleConfig.getStringFrom("language.yml", "options.banner.layer_color_title");
+        String title = moduleConfig.getTranslation(player, "options.banner.layer_color_title");
         String legacyTitle = itemAPI != null ? itemAPI.formatInventoryTitle(title) : title;
         Inventory inv = Bukkit.createInventory(new BannerMenuHolder(state, BannerMenuHolder.Stage.LAYER_COLOR), 54, legacyTitle);
 
@@ -117,8 +117,8 @@ public class BannerCreatorService {
             inv.setItem(slot++, preview);
         }
 
-        inv.setItem(BACK_SLOT, createBackItem());
-        inv.setItem(CREATE_SLOT, createCreateItem(state));
+        inv.setItem(BACK_SLOT, createBackItem(player));
+        inv.setItem(CREATE_SLOT, createCreateItem(player, state));
         player.openInventory(inv);
     }
 
@@ -136,7 +136,7 @@ public class BannerCreatorService {
 
         if (slot == CREATE_SLOT) {
             player.closeInventory();
-            ItemStack banner = createFinalBannerItem(state);
+            ItemStack banner = createFinalBannerItem(player, state);
             player.getInventory().addItem(banner);
             sendMessage(player, "options.messages.banner_created");
             playerStates.remove(player);
@@ -243,18 +243,18 @@ public class BannerCreatorService {
         };
     }
 
-    private ItemStack createBackItem() {
-        String name = moduleConfig.getStringFrom("language.yml", "options.banner.back");
+    private ItemStack createBackItem(Player player) {
+        String name = moduleConfig.getTranslation(player, "options.banner.back");
         return decorate(new ItemStack(Material.ARROW), name, List.of());
     }
 
-    private ItemStack createCreateItem(BannerBuilderState state) {
-        String name = moduleConfig.getStringFrom("language.yml", "options.banner.create");
+    private ItemStack createCreateItem(Player player, BannerBuilderState state) {
+        String name = moduleConfig.getTranslation(player, "options.banner.create");
         return decorate(state.buildBanner(), name, List.of("<gray>Click to add this banner to your inventory.</gray>"));
     }
 
-    private ItemStack createFinalBannerItem(BannerBuilderState state) {
-        String name = moduleConfig.getStringFrom("language.yml", "options.banner.final_name");
+    private ItemStack createFinalBannerItem(Player player, BannerBuilderState state) {
+        String name = moduleConfig.getTranslation(player, "options.banner.final_name");
         return decorate(state.buildBanner(), name, List.of());
     }
 
@@ -292,7 +292,7 @@ public class BannerCreatorService {
 
     private void sendMessage(Player player, String path) {
         if (moduleConfig == null || player == null) return;
-        String message = moduleConfig.getStringFrom("language.yml", path);
+        String message = moduleConfig.getTranslation(player, path);
         if (message != null && !message.isBlank()) {
             @SuppressWarnings("unchecked")
             MessageAPI<Player> messagesAPI = (MessageAPI<Player>) ModuleAPI.getMessagesAPI();
