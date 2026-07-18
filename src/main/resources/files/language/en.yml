@@ -40,6 +40,7 @@ votes:
     invalid: "<red>That theme is not available.</red>"
     not_available: "<red>You can only vote while waiting for the game to start.</red>"
     no_permission: "<red>You do not have permission to vote for</red> <yellow>{theme}</yellow><red>.</red>"
+    cooldown: "<red>You must wait {time} seconds before voting again.</red>"
 
 build:
   theme_broadcast: "<gray>The theme is:</gray> <light_purple><bold>{theme}</bold></light_purple>"

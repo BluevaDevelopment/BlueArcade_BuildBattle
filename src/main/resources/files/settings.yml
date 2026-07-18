@@ -25,6 +25,8 @@ waiting_items:
 votes:
   defaults:
     theme: "random"
+  # Seconds a player must wait between votes (0 to disable)
+  cooldown_seconds: 5
 
 # Configurable build themes. Each entry is the display name.
 # The menu is generated dynamically from this list.

@@ -46,6 +46,7 @@ public class BuildBattleVoteService {
     private final String moduleId;
     private final BuildBattleVoteMenuRepository menuRepository;
     private final Map<Integer, VoteState> waitingVoteStates = new ConcurrentHashMap<>();
+    private final Map<UUID, Long> voteCooldowns = new ConcurrentHashMap<>();
     private BuildBattleGame game;
 
     public BuildBattleVoteService(ModuleConfigAPI moduleConfig,
@@ -74,6 +75,7 @@ public class BuildBattleVoteService {
     }
 
     public void clearWaitingVote(int arenaId, UUID playerId) {
+        voteCooldowns.remove(playerId);
         VoteState state = waitingVoteStates.get(arenaId);
         if (state == null) {
             return;
@@ -144,6 +146,7 @@ public class BuildBattleVoteService {
             if (theme != null) {
                 voteState.castVote(player.getUniqueId(), theme);
             }
+            voteCooldowns.remove(player.getUniqueId());
         }
         waitingVoteStates.remove(arenaId);
     }
@@ -256,7 +259,15 @@ public class BuildBattleVoteService {
                 return true;
             }
 
+            long cooldownRemaining = getRemainingVoteCooldownSeconds(player.getUniqueId());
+            if (cooldownRemaining > 0) {
+                sendMessage(context, player, "votes.messages.cooldown",
+                        "{time}", String.valueOf(cooldownRemaining));
+                return true;
+            }
+
             voteState.castVote(player.getUniqueId(), theme);
+            voteCooldowns.put(player.getUniqueId(), System.currentTimeMillis());
 
             String themeLabel = getThemeLabel(theme);
             String message = moduleConfig.getTranslation(player, "votes.messages.broadcast");
@@ -309,7 +320,17 @@ public class BuildBattleVoteService {
                 return true;
             }
 
+            long cooldownRemaining = getRemainingVoteCooldownSeconds(player.getUniqueId());
+            if (cooldownRemaining > 0) {
+                String message = moduleConfig.getTranslation(player, "votes.messages.cooldown");
+                if (message != null && !message.isBlank()) {
+                    sendWaitingBroadcast(player, message.replace("{time}", String.valueOf(cooldownRemaining)));
+                }
+                return openMenuWaiting(player);
+            }
+
             waiting.castVote(player.getUniqueId(), theme);
+            voteCooldowns.put(player.getUniqueId(), System.currentTimeMillis());
             broadcastWaitingVote(player, theme, waiting);
             return openMenuWaiting(player);
         }
@@ -387,6 +408,21 @@ public class BuildBattleVoteService {
         }
 
         broadcastMessage(context, message);
+    }
+
+    private void sendWaitingBroadcast(Player player, String message) {
+        if (player == null || message == null || message.isBlank()) {
+            return;
+        }
+
+        @SuppressWarnings("unchecked")
+        MessageAPI<Player> messagesAPI = (MessageAPI<Player>) ModuleAPI.getMessagesAPI();
+        if (messagesAPI != null) {
+            messagesAPI.sendRaw(player, message);
+            return;
+        }
+
+        player.sendMessage(message);
     }
 
     private void broadcastToWaitingArena(Player sender, String message) {
@@ -508,6 +544,33 @@ public class BuildBattleVoteService {
         return theme != null && getValidThemeIds().contains(theme.toLowerCase(Locale.ROOT));
     }
 
+    private long getVoteCooldownMillis() {
+        if (moduleConfig == null) {
+            return 0;
+        }
+        int seconds = moduleConfig.getInt("votes.cooldown_seconds", 5);
+        return seconds <= 0 ? 0 : seconds * 1000L;
+    }
+
+    private long getRemainingVoteCooldownSeconds(UUID playerId) {
+        if (playerId == null) {
+            return 0;
+        }
+        long cooldownMillis = getVoteCooldownMillis();
+        if (cooldownMillis <= 0) {
+            return 0;
+        }
+        Long lastVote = voteCooldowns.get(playerId);
+        if (lastVote == null) {
+            return 0;
+        }
+        long remainingMillis = cooldownMillis - (System.currentTimeMillis() - lastVote);
+        if (remainingMillis <= 0) {
+            return 0;
+        }
+        return (remainingMillis + 999) / 1000;
+    }
+
     private boolean hasThemePermission(Player player, String theme) {
         if (player == null || theme == null) {
             return false;
@@ -543,12 +606,15 @@ public class BuildBattleVoteService {
     }
 
     private void sendMessage(GameContext<Player, Location, World, Material, ItemStack, Sound, Block, Entity> context,
-                            Player player, String messagePath) {
+                            Player player, String messagePath, String... replacements) {
         if (context == null || player == null || messagePath == null) {
             return;
         }
         String message = moduleConfig.getTranslation(player, messagePath);
         if (message != null && !message.isBlank()) {
+            for (int i = 0; i + 1 < replacements.length; i += 2) {
+                message = message.replace(replacements[i], replacements[i + 1]);
+            }
             context.getMessagesAPI().sendRaw(player, message);
         }
     }
