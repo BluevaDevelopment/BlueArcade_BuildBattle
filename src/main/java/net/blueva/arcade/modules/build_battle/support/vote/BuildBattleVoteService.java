@@ -266,17 +266,20 @@ public class BuildBattleVoteService {
                 return true;
             }
 
+            String previousVote = voteState.getPlayerVote(player.getUniqueId());
             voteState.castVote(player.getUniqueId(), theme);
             voteCooldowns.put(player.getUniqueId(), System.currentTimeMillis());
 
-            String themeLabel = getThemeLabel(theme);
-            String message = moduleConfig.getTranslation(player, "votes.messages.broadcast");
-            if (message != null && !message.isBlank()) {
-                int voteCount = voteState.getVotes(theme);
-                message = message.replace("{player}", player.getName())
-                        .replace("{theme}", themeLabel)
-                        .replace("{votes}", String.valueOf(voteCount));
-                broadcastMessage(context, message);
+            if (!theme.equals(previousVote)) {
+                String themeLabel = getThemeLabel(theme);
+                String message = moduleConfig.getTranslation(player, "votes.messages.broadcast");
+                if (message != null && !message.isBlank()) {
+                    int voteCount = voteState.getVotes(theme);
+                    message = message.replace("{player}", player.getName())
+                            .replace("{theme}", themeLabel)
+                            .replace("{votes}", String.valueOf(voteCount));
+                    broadcastMessage(context, message);
+                }
             }
             return true;
         }
@@ -329,9 +332,12 @@ public class BuildBattleVoteService {
                 return openMenuWaiting(player);
             }
 
+            String previousVote = waiting.getPlayerVote(player.getUniqueId());
             waiting.castVote(player.getUniqueId(), theme);
             voteCooldowns.put(player.getUniqueId(), System.currentTimeMillis());
-            broadcastWaitingVote(player, theme, waiting);
+            if (!theme.equals(previousVote)) {
+                broadcastWaitingVote(player, theme, waiting);
+            }
             return openMenuWaiting(player);
         }
 
